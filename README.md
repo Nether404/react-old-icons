@@ -2,6 +2,12 @@
 
 A comprehensive React component library featuring over **2,300 classic icons** from vintage operating systems and software. Includes iconic designs from Windows 95, 98, XP, Vista, 7, classic games, and retro applications. Perfect for retro-themed applications, nostalgic UIs, and preserving digital history.
 
+## 🌐 Interactive Icon Browser
+
+**[🔍 Browse All Icons →](https://gsnoopy.github.io/react-old-icons/)**
+
+Explore all 2,300+ icons with our interactive browser featuring search, filtering, and one-click code copying.
+
 ## 📦 Installation
 
 ```bash
@@ -225,3 +231,9 @@ npm test
 ---
 
 *Preserving digital history, one icon at a time.* 🏛️✨
+
+## 🏝️ In Memory
+
+The favicon of this project features **Johnny Castaway**, the iconic screensaver character from the 1990s.
+
+**Rest in peace, Shawn Bird** - the creative mind behind Johnny Castaway and many other digital experiences that defined an era of computing nostalgia.
