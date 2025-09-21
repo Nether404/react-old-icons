@@ -10,7 +10,7 @@ export interface OldIconProps {
 }
 
 const GITHUB_USERNAME = 'gsnoopy';
-const GITHUB_REPO = 'react-old-windows-icons';
+const GITHUB_REPO = 'react-old-icons';
 const GITHUB_BRANCH = 'main';
 
 const OldIcon: React.FC<OldIconProps> = ({

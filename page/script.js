@@ -7,7 +7,7 @@ class IconBrowser {
         this.currentPage = 1;
         this.iconsPerPage = 50;
         this.totalPages = 1;
-        
+
         this.init();
     }
 
@@ -22,28 +22,21 @@ class IconBrowser {
 
     async loadIcons() {
         try {
-            // Load the icons.jsonl file
             const response = await fetch('./icons.jsonl');
             const text = await response.text();
 
-            // Parse JSONL format (each line is a JSON object)
             this.icons = text.trim().split('\n')
                 .filter(line => line.trim())
                 .map(line => {
                     const icon = JSON.parse(line);
-
-                    // Use only the category from the data
                     this.categories.add(icon.category);
-
-                    const githubUrl = `https://raw.githubusercontent.com/gsnoopy/react-old-windows-icons/main/Icons/${encodeURIComponent(icon.name)}.webp`;
+                    const githubUrl = `https://raw.githubusercontent.com/gsnoopy/react-old-icons/main/Icons/${encodeURIComponent(icon.component)}.webp`;
 
                     return {
-                        oldName: icon.name,
-                        newName: icon.name + '.png',
+                        name: icon.name,
                         componentName: icon.component,
                         category: icon.category,
                         githubUrl: githubUrl,
-                        searchText: icon.normalized,
                         normalized: icon.normalized
                     };
                 });
@@ -60,24 +53,10 @@ class IconBrowser {
         }
     }
 
-
-    filenameToComponentName(filename, category) {
-        // Remove extension
-        let name = filename.replace(/\.(png|webp)$/i, '');
-
-        // Clean up the name
-        name = name
-            .replace(/[^a-zA-Z0-9]/g, '') // Remove special characters
-            .replace(/^\d/, 'Icon$&'); // Add prefix if starts with number
-
-        // Add category prefix
-        return category + name;
-    }
-
     populateCategories() {
         const categorySelect = document.getElementById('category');
         categorySelect.innerHTML = '<option value="">All Categories</option>';
-        
+
         Array.from(this.categories).sort().forEach(category => {
             const option = document.createElement('option');
             option.value = category;
@@ -87,31 +66,27 @@ class IconBrowser {
     }
 
     setupEventListeners() {
-        // Search input
         const searchInput = document.getElementById('search');
-        searchInput.addEventListener('input', (e) => {
-            this.currentPage = 1; // Reset para primeira página ao pesquisar
+        searchInput.addEventListener('input', () => {
+            this.currentPage = 1;
             this.filterIcons();
         });
 
-        // Category filter
         const categorySelect = document.getElementById('category');
-        categorySelect.addEventListener('change', (e) => {
-            this.currentPage = 1; // Reset para primeira página ao filtrar
+        categorySelect.addEventListener('change', () => {
+            this.currentPage = 1;
             this.filterIcons();
         });
 
-        // Size slider
         const sizeSlider = document.getElementById('size-slider');
         const sizeDisplay = document.getElementById('size-display');
-        
+
         sizeSlider.addEventListener('input', (e) => {
             this.currentSize = parseInt(e.target.value);
             sizeDisplay.textContent = `${this.currentSize}px`;
             this.updateIconSizes();
         });
 
-        // Icons per page
         const perPageSelect = document.getElementById('per-page');
         perPageSelect.addEventListener('change', (e) => {
             this.iconsPerPage = parseInt(e.target.value);
@@ -121,7 +96,6 @@ class IconBrowser {
             this.updateStats();
         });
 
-        // Pagination controls
         document.addEventListener('click', (e) => {
             if (e.target.classList.contains('page-btn')) {
                 this.currentPage = parseInt(e.target.dataset.page);
@@ -147,7 +121,6 @@ class IconBrowser {
             }
         });
 
-        // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
             if (e.ctrlKey || e.metaKey) {
                 if (e.key === 'f') {
@@ -161,7 +134,6 @@ class IconBrowser {
                 this.currentPage = 1;
                 this.filterIcons();
             }
-            // Navegação por teclado
             if (e.key === 'ArrowLeft' && this.currentPage > 1) {
                 this.currentPage--;
                 this.renderCurrentPage();
@@ -185,12 +157,11 @@ class IconBrowser {
             let matchesSearch = true;
 
             if (searchTerm) {
-                // Use the normalized field for better search
                 const searchWords = searchTerm.split(/\s+/).filter(word => word.length > 0);
                 matchesSearch = searchWords.every(word =>
                     icon.normalized.includes(word) ||
                     icon.componentName.toLowerCase().includes(word) ||
-                    icon.oldName.toLowerCase().includes(word)
+                    icon.name.toLowerCase().includes(word)
                 );
             }
 
@@ -219,7 +190,7 @@ class IconBrowser {
     renderCurrentPage() {
         const grid = document.getElementById('icons-grid');
         const currentIcons = this.getCurrentPageIcons();
-        
+
         grid.innerHTML = '';
 
         if (this.filteredIcons.length === 0) {
@@ -244,20 +215,17 @@ class IconBrowser {
 
     renderPagination() {
         let paginationHtml = '';
-        
+
         if (this.totalPages > 1) {
             paginationHtml = '<div class="pagination">';
-            
-            // Botão anterior
+
             paginationHtml += `<button id="prev-page" ${this.currentPage === 1 ? 'disabled' : ''}>◀ Prev</button>`;
-            
-            // Área fixa para os números (sempre ocupa o mesmo espaço)
+
             paginationHtml += '<div class="page-numbers">';
-            
-            // Lógica simplificada: sempre mostra no máximo 5 números
+
             const maxVisible = 5;
             let startPage, endPage;
-            
+
             if (this.totalPages <= maxVisible) {
                 startPage = 1;
                 endPage = this.totalPages;
@@ -265,42 +233,37 @@ class IconBrowser {
                 const half = Math.floor(maxVisible / 2);
                 startPage = Math.max(1, this.currentPage - half);
                 endPage = Math.min(this.totalPages, startPage + maxVisible - 1);
-                
+
                 if (endPage - startPage + 1 < maxVisible) {
                     startPage = Math.max(1, endPage - maxVisible + 1);
                 }
             }
-            
-            // Primeira página e "..." se necessário
+
             if (startPage > 1) {
                 paginationHtml += `<button class="page-btn" data-page="1">1</button>`;
                 if (startPage > 2) {
                     paginationHtml += `<span class="page-dots">...</span>`;
                 }
             }
-            
-            // Páginas do meio
+
             for (let i = startPage; i <= endPage; i++) {
                 paginationHtml += `<button class="page-btn ${i === this.currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
             }
-            
-            // "..." e última página se necessário
+
             if (endPage < this.totalPages) {
                 if (endPage < this.totalPages - 1) {
                     paginationHtml += `<span class="page-dots">...</span>`;
                 }
                 paginationHtml += `<button class="page-btn" data-page="${this.totalPages}">${this.totalPages}</button>`;
             }
-            
-            paginationHtml += '</div>'; // fecha page-numbers
-            
-            // Botão próximo
+
+            paginationHtml += '</div>';
+
             paginationHtml += `<button id="next-page" ${this.currentPage === this.totalPages ? 'disabled' : ''}>Next ▶</button>`;
-            
+
             paginationHtml += '</div>';
         }
-        
-        // Insere a paginação após o grid
+
         const container = document.querySelector('.icons-container');
         let paginationDiv = container.querySelector('.pagination-container');
         if (!paginationDiv) {
@@ -319,11 +282,11 @@ class IconBrowser {
         const div = document.createElement('div');
         div.className = 'icon-item';
         div.title = `Click to copy: ${icon.componentName}`;
-        
+
         div.innerHTML = `
-            <img 
-                src="${icon.githubUrl}" 
-                alt="${icon.oldName}"
+            <img
+                src="${icon.githubUrl}"
+                alt="${icon.name}"
                 class="icon-image"
                 width="${this.currentSize}"
                 height="${this.currentSize}"
@@ -350,11 +313,10 @@ class IconBrowser {
 
     copyComponentName(componentName) {
         const code = `<${componentName} size={32} />`;
-        
+
         navigator.clipboard.writeText(code).then(() => {
             this.showCopyNotification();
-        }).catch(err => {
-            // Fallback for older browsers
+        }).catch(() => {
             const textArea = document.createElement('textarea');
             textArea.value = code;
             document.body.appendChild(textArea);
@@ -368,7 +330,7 @@ class IconBrowser {
     showCopyNotification() {
         const notification = document.getElementById('copy-notification');
         notification.classList.add('show');
-        
+
         setTimeout(() => {
             notification.classList.remove('show');
         }, 2000);
@@ -379,9 +341,9 @@ class IconBrowser {
         const filteredCount = this.filteredIcons.length;
         const startIndex = (this.currentPage - 1) * this.iconsPerPage + 1;
         const endIndex = Math.min(this.currentPage * this.iconsPerPage, filteredCount);
-        
+
         document.getElementById('total-icons').textContent = `Total: ${totalCount.toLocaleString()} icons`;
-        
+
         if (filteredCount === 0) {
             document.getElementById('filtered-count').textContent = 'No icons shown';
         } else if (this.totalPages === 1) {
@@ -389,10 +351,9 @@ class IconBrowser {
         } else {
             document.getElementById('filtered-count').textContent = `Showing ${startIndex}-${endIndex} of ${filteredCount.toLocaleString()} icons (Page ${this.currentPage}/${this.totalPages})`;
         }
-        
+
         document.getElementById('status-count').textContent = filteredCount.toLocaleString();
-        
-        // Update status
+
         const statusField = document.querySelector('.status-bar-field');
         if (filteredCount === totalCount && this.totalPages === 1) {
             statusField.textContent = 'Ready';
@@ -406,44 +367,6 @@ class IconBrowser {
     }
 }
 
-// Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     new IconBrowser();
-});
-
-// Add some Windows 98 sound effects (optional)
-document.addEventListener('click', (e) => {
-    if (e.target.tagName === 'BUTTON' || e.target.closest('.icon-item')) {
-        // You could add actual Windows 98 sound effects here
-        console.log('*click*');
-    }
-});
-
-// Easter egg: Konami code
-let konamiCode = [];
-const konamiSequence = [
-    'ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown',
-    'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight',
-    'KeyB', 'KeyA'
-];
-
-document.addEventListener('keydown', (e) => {
-    konamiCode.push(e.code);
-    if (konamiCode.length > konamiSequence.length) {
-        konamiCode.shift();
-    }
-    
-    if (konamiCode.length === konamiSequence.length && 
-        konamiCode.every((code, index) => code === konamiSequence[index])) {
-        
-        // Easter egg activated!
-        document.body.style.filter = 'hue-rotate(180deg)';
-        alert('🎉 Windows 98 mode activated! 🎉');
-        
-        setTimeout(() => {
-            document.body.style.filter = '';
-        }, 5000);
-        
-        konamiCode = [];
-    }
 });
