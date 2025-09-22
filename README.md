@@ -30,17 +30,17 @@ function App() {
   return (
     <div>
       {/* Basic usage */}
-      <Windows7Calculator size={32} />
+      <WindowsDesktopControlPanel size={32} />
       
       {/* With custom styling */}
-      <Games1nsane 
+      <DrvSpaceIcon 
         size={48} 
         className="my-icon" 
         style={{ margin: '10px' }} 
       />
       
       {/* Responsive sizing */}
-      <SoftwarePhotoshop size="2rem" />
+      <WindowsRecycleBin size="2rem" />
       
       {/* With accessibility */}
       <Windows95Notepad 
@@ -71,7 +71,6 @@ This library includes **2,300+ classic icons** organized by categories:
 - **💻 Software** - Application icons (Photoshop, WinRAR, Media Player, Firefox, etc.)
 - **🖥️ System** - System and utility icons from various operating systems
 - **🪟 Windows Versions** - OS-specific icons from Windows 95, 98, XP, Vista, 7
-- **🎨 Themes** - Various icon themes and collections from different eras
 
 ### Icon Browser
 
@@ -143,7 +142,7 @@ This collection falls under fair use for:
 This project was built using a comprehensive data pipeline and modern web technologies:
 
 ### 🔄 Data Collection & Processing
-- **🐍 Web Scraping**: Used Python with **BeautifulSoup** to systematically collect classic icons from various sources
+- **🐍 Web Scraping**: Used Python with **BeautifulSoup** to systematically collect classic icons from sources
 - **🤖 AI Processing**: Leveraged **Ollama** with **Llama 3.1 8B** locally for:
   - Converting original icon names into valid React component names
   - Intelligent categorization of icons by software type and era
@@ -230,8 +229,6 @@ npm test
 - 📧 **Email**: For sensitive matters, copyright concerns, or direct contact: **gustav.awk@gmail.com**
 
 ---
-
-*Preserving digital history, one icon at a time.* 🏛️✨
 
 ## 🏝️ In Memory
 
