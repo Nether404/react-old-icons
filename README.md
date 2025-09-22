@@ -10,6 +10,8 @@ Explore all 2,300+ icons with our interactive browser featuring search, filterin
 
 ## 📦 Installation
 
+**NPM Package**: [react-old-icons](https://www.npmjs.com/package/react-old-icons)
+
 ```bash
 npm install react-old-icons
 ```
@@ -74,7 +76,7 @@ This library includes **2,300+ classic icons** organized by categories:
 
 ### Icon Browser
 
-Visit our [**Interactive Icon Browser**](https://your-github-pages-url/page/) to:
+Visit our [**Interactive Icon Browser**](https://gsnoopy.github.io/react-old-icons/) to:
 - 🔍 Search through all available icons
 - 📋 Copy component code with one click
 - 📁 Filter by category
