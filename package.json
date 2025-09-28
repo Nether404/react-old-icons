@@ -10,6 +10,8 @@
   ],
   "scripts": {
     "build": "tsc",
+    "dev": "vite",
+    "preview": "vite preview",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
@@ -26,7 +28,8 @@
     "react": ">=16.8.0"
   },
   "devDependencies": {
-    "@types/react": "^18.3.24",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
     "react": "^19.1.1",
     "typescript": "^5.0.0"
   },
